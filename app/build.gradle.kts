@@ -39,7 +39,6 @@ dependencies {
     implementation(libs.constraintlayout)
 
     implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.1")
-    implementation("com.google.mlkit:text-recognition:16.0.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
