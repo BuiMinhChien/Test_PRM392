@@ -1,5 +1,7 @@
 package com.example.projec_demo;
 
+import android.util.Log;
+
 import com.pspdfkit.annotations.Annotation;
 import com.pspdfkit.annotations.AnnotationType;
 import com.pspdfkit.annotations.HighlightAnnotation;
@@ -15,9 +17,28 @@ import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.List;
 
-public class AnnotationHandler {
+public class PdfFileHandler {
+    public static String createJsonAnnotationFileName(PdfDocument document) {
+        String pdfFileName = document.getTitle();
+        String documentId = String.valueOf(pdfFileName.hashCode());
+        // Xóa ký tự không hợp lệ trong file name (nếu có)
+        pdfFileName = pdfFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+        String fileName = pdfFileName + "_annotations_file_" + documentId + ".json";
+        return fileName;
+    }
     public static void exportAnnotationsWithText(PdfDocument document, File outputFile) {
         try {
+            String pdfFileName = document.getTitle(); // hoặc document.getTitle()
+            String documentId = document.getUid() != null ? document.getUid().toString() : pdfFileName;
+            //Nếu file cũ đã tồn tại → XÓA để tránh bị nối thêm dữ liệu cũ
+            if (outputFile.exists()) {
+                boolean deleted = outputFile.delete();
+                if (deleted) {
+                    Log.i("JSON_EXPORT", "Old annotation file deleted before writing new data.");
+                } else {
+                    Log.w("JSON_EXPORT", "Failed to delete old annotation file — will overwrite instead.");
+                }
+            }
             JSONArray annotationsArray = new JSONArray();
             //Lấy toàn bộ highlight annotations trong document (toàn bộ các trang)
             List<Annotation> allAnnotations = document
@@ -31,6 +52,8 @@ public class AnnotationHandler {
                 //Trích text nằm trong vùng highlight (vẫn cần text layer)
                 String extractedText = document.getPageText(pageIndex, highlight.getBoundingBox());
                 JSONObject highlightObj = new JSONObject();
+                highlightObj.put("documentId", documentId);
+                highlightObj.put("pdfFileName", pdfFileName);
                 highlightObj.put("pageIndex", pageIndex);
                 highlightObj.put("id", highlight.getUuid().toString());
                 highlightObj.put("color", highlight.getColor());
@@ -75,7 +98,7 @@ public class AnnotationHandler {
                         .createAnnotationFromInstantJson(metadataString);
             }
             //Lưu thay đổi
-            document.saveIfModified();
+//            document.saveIfModified();
             System.out.println("Imported annotations from JSON: " + annotationsArray.length());
         } catch (Exception e) {
             e.printStackTrace();

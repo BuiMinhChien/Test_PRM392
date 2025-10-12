@@ -26,22 +26,25 @@ public class MyPdfActivity extends PdfActivity {
         super.onDocumentLoaded(document);
         this.document = document;
         Log.i("MyPdfActivity", "Document loaded: " + document);
-        File jsonFile = new File(getExternalFilesDir(null), "annotations_with_text.json");
+        String fileName = PdfFileHandler.createJsonAnnotationFileName(document);
+        File jsonFile = new File(getExternalFilesDir(null), fileName);
         if (jsonFile.exists()) {
-            AnnotationHandler.importAnnotationsFromJson(document, jsonFile);
+            PdfFileHandler.importAnnotationsFromJson(document, jsonFile);
         }
     }
+
     @Override
     protected void onStop() {
         super.onStop();
         if (document == null) return;
         try {
-            document.saveIfModified();
-            File jsonFile = new File(getExternalFilesDir(null), "annotations_with_text.json");
-            AnnotationHandler.exportAnnotationsWithText(document, jsonFile);
-            Log.i("JSON_EXPORT", "Đã lưu annotation + text tại: " + jsonFile.getAbsolutePath());
+//            document.saveIfModified();
+            String fileName = PdfFileHandler.createJsonAnnotationFileName(document);
+            File jsonFile = new File(getExternalFilesDir(null), fileName);
+            PdfFileHandler.exportAnnotationsWithText(document, jsonFile);
+            Log.i("JSON_EXPORT", "Annotations and text have been saved at: " + jsonFile.getAbsolutePath());
         } catch (Exception e) {
-            Log.e("JSON_EXPORT", "Lỗi khi export annotation JSON", e);
+            Log.e("JSON_EXPORT", "Error while exporting annotation JSON", e);
         }
     }
 }
