@@ -39,6 +39,8 @@ public class MyPdfActivity extends PdfActivity {
         if (document == null) return;
         try {
 //            document.saveIfModified();
+            int currentPage = getPdfFragment().getPageIndex() + 1;
+            Log.i("JSON_EXPORT", "Trang cuối cùng là: " + currentPage);
             String fileName = PdfFileHandler.createJsonAnnotationFileName(document);
             File jsonFile = new File(getExternalFilesDir(null), fileName);
             PdfFileHandler.exportAnnotationsWithText(document, jsonFile);
