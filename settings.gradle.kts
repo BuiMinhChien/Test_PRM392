@@ -15,8 +15,11 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
+        //code cho nutrient
         mavenCentral()
-//        maven { url = uri("https://jitpack.io") }
+        maven {
+            url = uri("https://my.nutrient.io/maven")
+        }
     }
 }
 

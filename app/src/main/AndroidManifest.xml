@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,8 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projec_demo">
         <activity
-            android:name=".PdfActivity"
-            android:exported="false" />
+            android:name="com.pspdfkit.ui.PdfActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name="com.example.projec_demo.MyPdfActivity"
+            android:label="MyPdfActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
